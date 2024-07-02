@@ -1,6 +1,6 @@
-import { AllCategories } from "../../models/modelDb";
+const { AllCategories } = require("../../models/modelDb");
 
-const getCategory = async (req, res) => {
+const adminGetCategory = async (req, res) => {
     try {
         const result = await AllCategories.find({})
             .project({ name: 1 })
@@ -11,4 +11,4 @@ const getCategory = async (req, res) => {
     }
 };
 
-module.exports = { getCategory };
+module.exports = { adminGetCategory };
