@@ -11,5 +11,8 @@ const client = new MongoClient(uri, {
     },
 });
 const jwt = require("jsonwebtoken");
-
-module.exports = { port, client, jwt, ObjectId };
+const store_id= process.env.storeId;
+const store_pass= process.env.storePass;
+const is_live= false;
+const SSLCommerzPayment = require("sslcommerz-lts");
+module.exports = { port, client, jwt, ObjectId, store_id, store_pass, is_live, SSLCommerzPayment };

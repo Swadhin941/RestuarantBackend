@@ -17,6 +17,14 @@ app.get('/', (req, res)=>{
     res.send({message: "server running"});
 })
 
+app.use((req, res, next)=>{
+    res.status(404).send("<h1 style='text-align: center;'>Page not found</h1>");
+})
+
+app.use((error, req, res, next)=>{
+    res.status(500).send(`<h1>Something went wrong</h1>`);
+})
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
