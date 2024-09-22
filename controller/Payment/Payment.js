@@ -10,7 +10,6 @@ const { AllPayments, AllCart } = require("../../models/modelDb");
 
 const initPayment = async (req, res) => {
     try {
-        console.log(req.body);
         const trxID = new ObjectId().toString();
         const data = {
             total_amount: req.body.totalAmount,
@@ -88,6 +87,17 @@ const successPayment = async (req, res) => {
     }
 };
 
+const allTransactions = async (req, res) => {
+    try {
+        const result = await AllPayments.find({
+            user: req.query.user,
+        }).toArray();
+        return res.status(200).send(result);
+    } catch (error) {
+        return res.status(500).send({ message: "Something went wrong!" });
+    }
+};
+
 const failPayment = async (req, res) => {
     try {
     } catch (error) {
@@ -95,4 +105,68 @@ const failPayment = async (req, res) => {
     }
 };
 
-module.exports = { initPayment, successPayment, failPayment };
+const allOrders = async (req, res) => {
+    try {
+        const result = await AllPayments.find({
+            deliverStatus: false,
+        }).toArray();
+        return res.status(200).send(result);
+    } catch (error) {
+        return res.status(500).send({ message: "Something went wrong!" });
+    }
+};
+
+const timeUpdate = async (req, res) => {
+    try {
+        const filter = { _id: new ObjectId(req.body.orderId) };
+        const updatedDoc = {
+            $set: {
+                deliverTimeInMilli: req.body.deliverTimeInMilli,
+            },
+        };
+        const option = { upsert: false };
+        const result = await AllPayments.updateOne(filter, updatedDoc, option);
+        return res.status(200).send(result);
+    } catch (error) {
+        return res.status(500).send({ message: "Something went wrong!" });
+    }
+};
+
+const updateDeliveryStatus = async (req, res) => {
+    try {
+        console.log(req.body);
+        const filter = { _id: new ObjectId(req.body.id) };
+        const updatedDoc = {
+            $set: {
+                deliverStatus: true,
+            },
+        };
+        const option = { upsert: false };
+        const result = await AllPayments.updateOne(filter, updatedDoc, option);
+        return res.status(200).send(result);
+    } catch (error) {
+        return res.status(500).send({ message: "Something went wrong!" });
+    }
+};
+
+const allDelivered = async (req, res) => {
+    try {
+        const result = await AllPayments.find({ deliverStatus: true })
+            .sort({ timeInMill: -1 })
+            .toArray();
+        return res.status(200).send(result);
+    } catch (error) {
+        return res.status(500).send({ message: "Something went wrong!" });
+    }
+};
+
+module.exports = {
+    initPayment,
+    successPayment,
+    failPayment,
+    allTransactions,
+    allOrders,
+    timeUpdate,
+    updateDeliveryStatus,
+    allDelivered,
+};

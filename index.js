@@ -6,12 +6,14 @@ const { userRouter } = require("./routes/user.route");
 const { adminProductRouter } = require("./routes/admin-product.route");
 const { productRouter } = require("./routes/ProductRoutes");
 const { AllItem } = require("./models/modelDb");
+const { feedbackRoutes } = require("./routes/feedbackRoutes");
 
 app.use(cors());
 app.use(express.json());
 app.use(productRouter);
 app.use("/auth", userRouter);
 app.use("/admin", adminProductRouter);
+app.use('/feedback', feedbackRoutes);
 
 app.get('/', (req, res)=>{
     res.send({message: "server running"});

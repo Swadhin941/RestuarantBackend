@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const { AllItem } = require("../../models/modelDb");
+const { AllItem, AllFeedbacks } = require("../../models/modelDb");
 
 const productDetails= async(req, res)=>{
     try{
