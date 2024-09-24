@@ -11,7 +11,7 @@ const {
     productQuantityDec,
     specificCategoryCartCheck,
 } = require("../controller/Cart/Cart");
-const { getProductList } = require("../controller/Product/getProductList");
+const { getProductList, recentProducts } = require("../controller/Product/getProductList");
 const {
     initPayment,
     successPayment,
@@ -24,6 +24,7 @@ const {
 const { verifyForbidden } = require("../middleware/verifyForbidden");
 const { verifyAdmin } = require("../middleware/verifyAdmin");
 const { specificProductRating, topFewProducts } = require("../controller/Product/productRatings");
+const { verifyChef } = require("../middleware/verifyChef");
 const productRouter = express.Router();
 
 productRouter.get("/get-category", getCategory);
@@ -65,7 +66,7 @@ productRouter.patch("/update-time", verifyJWT, verifyForbidden, timeUpdate);
 productRouter.put(
     "/update-delivery-status",
     verifyJWT,
-    verifyAdmin,
+    verifyChef,
     verifyForbidden,
     updateDeliveryStatus
 );
@@ -77,5 +78,6 @@ productRouter.get(
 );
 productRouter.post("/specific-products-rating",specificProductRating);
 productRouter.get('/top-products', topFewProducts);
+productRouter.get('/get-recent-posts', recentProducts);
 
 module.exports = { productRouter };

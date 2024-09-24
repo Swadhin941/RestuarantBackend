@@ -17,6 +17,7 @@ const { editItem } = require("../controller/admin-product/editItem");
 const { deleteItem } = require("../controller/admin-product/deleteItem");
 const { getProducts } = require("../controller/admin-product/getProducts");
 const { verifyForbidden } = require("../middleware/verifyForbidden");
+const { displayProductPurchase, monthlyRevenue } = require("../controller/admin-product/dashboard");
 const adminProductRouter = express.Router();
 
 adminProductRouter.get(
@@ -85,5 +86,8 @@ adminProductRouter.post(
     verifyForbidden,
     getProducts
 );
+
+adminProductRouter.get("/product-purchase", verifyJWT, verifyAdmin, verifyForbidden, displayProductPurchase);
+adminProductRouter.post("/yearly-revenue-by-month", verifyJWT, verifyAdmin, verifyForbidden, monthlyRevenue);
 
 module.exports = { adminProductRouter };

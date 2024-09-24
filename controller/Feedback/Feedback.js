@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { AllPayments, AllFeedbacks, Users } = require("../../models/modelDb");
 const fetchUserDetails = require("./fetchUserDetails");
 
@@ -60,4 +61,33 @@ const getAllFeedback = async (req, res) => {
     }
 };
 
-module.exports = { productUserCheck, feedbackPost, getAllFeedback };
+const editComment= async(req, res)=>{
+    try{
+        const filter = {_id: new ObjectId(req.body._id)};
+        const updatedDoc= {
+            $set: {
+                message: req.body.message
+            }
+        };
+        const option = {upsert: false};
+        const result = await AllFeedbacks.updateOne(filter, updatedDoc, option);
+        return res.status(200).send(result);
+    }
+    catch(error){
+        return res.status(500).send({message: "Something went wrong!"});
+    }
+};
+
+const deleteFeedback= async(req, res)=>{
+    try{
+        const filter = {_id: new ObjectId(req.query.deleteId)};
+        const result = await AllFeedbacks.deleteOne(filter);
+        return res.status(200).send(result);
+        
+    }
+    catch(error){
+        return res.status(500).send({message: "Something went wrong!"});
+    }
+}
+
+module.exports = { productUserCheck, feedbackPost, getAllFeedback, editComment, deleteFeedback };

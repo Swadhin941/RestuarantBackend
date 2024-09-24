@@ -13,4 +13,14 @@ const getProductList= async(req, res)=>{
         return res.status(500).send({message: "Something went wrong!"});
     }
 }
-module.exports= {getProductList}
+
+const recentProducts= async(req, res)=>{
+    try{
+        const getProducts= await AllItem.find({}).sort({postSec: -1}).limit(2).toArray();
+        return res.status(200).send(getProducts);
+    }
+    catch(error){
+        return res.status(500).send({message: "Something went wrong!"});
+    }
+}
+module.exports= {getProductList, recentProducts}
