@@ -1,6 +1,6 @@
 const express = require("express");
 const { getCategory } = require("../controller/Product/getCategory");
-const { productDetails } = require("../controller/Product/productDetails");
+const { productDetails, productNameForSearch } = require("../controller/Product/productDetails");
 const { verifyJWT } = require("../middleware/verifyJWT");
 const {
     cart,
@@ -79,5 +79,6 @@ productRouter.get(
 productRouter.post("/specific-products-rating",specificProductRating);
 productRouter.get('/top-products', topFewProducts);
 productRouter.get('/get-recent-posts', recentProducts);
+productRouter.get('/product/search', productNameForSearch);
 
 module.exports = { productRouter };
