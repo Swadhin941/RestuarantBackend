@@ -3,6 +3,7 @@ const { AllCart } = require("../../models/modelDb");
 
 const cart = async (req, res) => {
     try {
+        // console.log(req.body);
         const result = await AllCart.insertOne({ ...req.body });
         const getId = await AllCart.findOne({
             $and: [{ user: req.body.user }, { productId: req.body.productId }],

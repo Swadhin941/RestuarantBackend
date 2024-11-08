@@ -19,6 +19,8 @@ const avgProductRatingNoUser = (allProducts, allFeedbacks) => {
             ratingValue: avgRating,
             totalRatings,
             price: product.price,
+            description: product.description,
+            category: product.category,
         });
     });
     popular.sort((a, b) => b.ratingValue - a.ratingValue);
@@ -40,7 +42,6 @@ const avgProductRatingUser = (allProducts, allFeedbacks, userCart) => {
         const findCart = userCart.find(
             (CartStatus) => CartStatus.productId === product._id.toString()
         );
-
         popular.push({
             title: product.title,
             _id: product._id,
@@ -48,7 +49,10 @@ const avgProductRatingUser = (allProducts, allFeedbacks, userCart) => {
             ratingValue: avgRating,
             totalRatings,
             price: product.price,
-            cartStatus: findCart? true: false
+            description: product.description,
+            cartStatus: findCart? true: false,
+            category: product.category,
+            cartId: findCart && findCart._id.toString()
         });
     });
     popular.sort((a, b) => b.ratingValue - a.ratingValue);
