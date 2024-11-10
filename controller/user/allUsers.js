@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { Users } = require("../../models/modelDb");
 
 const allUsers = async (req, res) => {
@@ -63,6 +64,25 @@ const deleteUser = async(req, res)=>{
     catch(error){
         return res.status(500).send({message: "Something went wrong!"});
     }
+};
+
+const updateUserByAdmin= async(req, res)=>{
+    try{
+        console.log(req.body)
+        const filter = {_id: new ObjectId(req.body.id)};
+        const updatedDoc= {
+            $set: {
+                fullName: req.body.fullName,
+                email: req.body.email
+            }
+        }
+        const option= {upsert: false};
+        const result = await Users.updateOne(filter, updatedDoc, option);
+        return res.status(200).send(result);
+    }
+    catch(error){
+        return res.status(500).send({message: "Something went wrong!"});
+    }
 }
 
-module.exports = { allUsers, updateUser, roleUpdate, deleteUser };
+module.exports = { allUsers, updateUser, roleUpdate, deleteUser, updateUserByAdmin };

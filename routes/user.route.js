@@ -11,6 +11,7 @@ const {
     updateUser,
     roleUpdate,
     deleteUser,
+    updateUserByAdmin,
 } = require("../controller/user/allUsers");
 const userRouter = express.Router();
 userRouter.post("/login", login);
@@ -33,5 +34,7 @@ userRouter.delete(
     verifyForbidden,
     deleteUser,
 );
+
+userRouter.put(`/update-user-by-admin`, verifyJWT, verifyAdmin, verifyForbidden, updateUserByAdmin)
 
 module.exports = { userRouter };

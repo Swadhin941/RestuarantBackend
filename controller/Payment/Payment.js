@@ -160,6 +160,17 @@ const allDelivered = async (req, res) => {
     }
 };
 
+const removeOrder = async(req, res)=>{
+    try{
+        // console.log(req.body);
+        const result = await AllPayments.deleteOne({_id: new ObjectId(req.body._id)});
+        return res.status(201).send(result);
+    }
+    catch(error){
+        return res.status(500).send({message: "Something went wrong!"});
+    }
+}
+
 module.exports = {
     initPayment,
     successPayment,
@@ -169,4 +180,5 @@ module.exports = {
     timeUpdate,
     updateDeliveryStatus,
     allDelivered,
+    removeOrder
 };

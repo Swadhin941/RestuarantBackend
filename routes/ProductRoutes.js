@@ -20,6 +20,7 @@ const {
     timeUpdate,
     updateDeliveryStatus,
     allDelivered,
+    removeOrder,
 } = require("../controller/Payment/Payment");
 const { verifyForbidden } = require("../middleware/verifyForbidden");
 const { verifyAdmin } = require("../middleware/verifyAdmin");
@@ -80,5 +81,6 @@ productRouter.post("/specific-products-rating",specificProductRating);
 productRouter.get('/top-products', topFewProducts);
 productRouter.get('/get-recent-posts', recentProducts);
 productRouter.get('/product/search', productNameForSearch);
+productRouter.delete("/remove-order", verifyJWT, verifyForbidden, removeOrder);
 
 module.exports = { productRouter };

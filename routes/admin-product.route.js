@@ -87,7 +87,7 @@ adminProductRouter.post(
     getProducts
 );
 
-adminProductRouter.get("/product-purchase", verifyJWT, verifyAdmin, verifyForbidden, displayProductPurchase);
+adminProductRouter.get("/product-purchase", displayProductPurchase);
 adminProductRouter.post("/yearly-revenue-by-month", verifyJWT, verifyAdmin, verifyForbidden, monthlyRevenue);
 
 module.exports = { adminProductRouter };

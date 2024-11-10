@@ -2,38 +2,26 @@ const { AllFeedbacks, AllPayments } = require("../../models/modelDb");
 
 const displayProductPurchase = async (req, res) => {
     try {
-        const allPurchases = await AllPayments.find({}).toArray();
+        const allPurchases = await AllPayments.find({paid: true}).toArray();
         let allData = [];
-        allPurchases.forEach((element) => {
-            let temp = [];
-            element.allItem.forEach((item) => {
-                if (allData.length === 0) {
+        allPurchases.forEach((element, indexRoot)=>{
+            element.allItem.forEach((item, index)=>{
+                const findIndex= allData.findIndex((data)=>data.name===item.title);
+                if(findIndex>=0){
+                    allData[findIndex].quantity= allData[findIndex].quantity+item.quantity;
+                    allData[findIndex].totalPrice= allData[findIndex].totalPrice+item.price;
+                }
+                else{
                     allData.push({
                         name: item.title,
                         productId: item.productId,
                         quantity: item.quantity,
-                    });
-                } else {
-                    temp.push({
-                        name: item.title,
-                        productId: item.productId,
-                        quantity: item.quantity,
+                        totalPrice: item.price,
                     });
                 }
-            });
-            temp.forEach((tempItem) => {
-                allData.forEach((findItem) => {
-                    if (findItem.productId === tempItem.productId) {
-                        findItem.quantity += tempItem.quantity;
-                    } else {
-                        allData.push(tempItem);
-                    }
-                });
-            });
-        });
-        if (allData.length) {
-            return res.status(200).send(allData);
-        }
+            })
+        })
+        return res.status(201).send(allData);
     } catch (error) {
         return res.status(500).send({ message: "Something went wrong!" });
     }
@@ -41,39 +29,32 @@ const displayProductPurchase = async (req, res) => {
 
 const monthlyRevenue = async (req, res) => {
     try {
-        const allPayments = await AllPayments.find({}).toArray();
-        const tempArray = [];
-        const tempArray2 = [];
-        allPayments.forEach((element) => {
-            if (tempArray.length === 0 && tempArray2.length === 0) {
-                const dataYear = new Date(element.timeInMill).getFullYear();
-                if (dataYear === req.body.year) {
-                    tempArray.push({
-                        month: element.currentMonth,
-                        revenue: element.totalAmount,
-                    });
-                    tempArray2.push({
-                        revenue: element.totalAmount,
-                        user: element.user,
-                    });
-                }
-            } else {
-                const dataYear = new Date(element.timeInMill).getFullYear();
-                if (dataYear === req.body.year) {
-                    tempArray.forEach((item) => {
-                        if (item.month === element.currentMonth) {
-                            item.revenue += element.totalAmount;
-                        }
-                    });
-                    tempArray2.forEach((item) => {
-                        if (item.user === element.user) {
-                            item.revenue += element.totalAmount;
-                        }
-                    });
-                }
+        const allPayments= await AllPayments.find({dateString: {$regex: new RegExp(req.body.year)}}).toArray();
+        let tempArray= [];
+        let tempArray2= [];
+        allPayments.forEach((element)=>{
+            const findIndex= tempArray.findIndex((data)=>data.month=== element.currentMonth);
+            if(findIndex>=0){
+                tempArray[findIndex].revenue+= element.totalAmount;
             }
-        });
-        return res.status(200).send({ data: tempArray, data2: tempArray2 });
+            else{
+                tempArray.push({
+                    month: element.currentMonth,
+                    revenue: element.totalAmount,
+                });
+            }
+            const findIndex2= tempArray2.findIndex((data)=>data.user=== element.user);
+            if(findIndex2>=0){
+                tempArray2[findIndex2].revenue+= element.totalAmount;
+            }
+            else{
+                tempArray2.push({
+                    user: element.user,
+                    revenue: element.totalAmount,
+                });
+            }
+        })
+        return res.status(200).send({data: tempArray, data2: tempArray2});
     } catch (error) {
         return res.status(500).send({ message: "Something went wrong!" });
     }
