@@ -85,4 +85,14 @@ const updateUserByAdmin= async(req, res)=>{
     }
 }
 
-module.exports = { allUsers, updateUser, roleUpdate, deleteUser, updateUserByAdmin };
+const allChef= async(req, res)=>{
+    try{
+        const result = await Users.find({role: "chef"}).project({password: 0}).limit(6).toArray();
+        return res.status(200).send(result);
+    }
+    catch(error){
+        return res.status(500).send({message: "Something went wrong!"});
+    }
+}
+
+module.exports = { allUsers, updateUser, roleUpdate, deleteUser, updateUserByAdmin, allChef };
